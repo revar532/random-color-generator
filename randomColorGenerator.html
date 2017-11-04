@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" type="image/png" href="favicon2.png"/>
+	<title>Random colors generator</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			border: 0;
+			color: white;
+		}
+
+		body{
+			width: 50%;
+			background: black;
+			margin-right: auto;
+			margin-left: auto;
+			height: 100vh;
+		}
+
+		canvas{
+			display: block;
+			width: 70%;
+			text-align: center;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		h2{
+			width: 100%;
+			text-align: center;
+			margin-top: 1em;
+			display: block;
+			font-size: 1.3em;
+		}
+
+		ul{
+			width: 100%;
+			text-align: center;
+			margin-top: 2em;
+		}
+
+		li{
+			width: 33%;
+			list-style: none;
+			text-align: center;
+			font-size: 1.4em;
+			display: inline-block;
+		}
+
+		#colorButton{
+			display: block;
+			width: 25%;
+			height: 1.6em;
+			margin-right: auto;
+			margin-left: auto;
+			margin-top: 1em;
+			color: black;
+			border-radius: 1em;
+			font-size: 1.2em;
+			font-weight: 500;
+		}
+
+		form{
+			margin-left: 22em;
+			font-size: 1.15em;
+		}
+
+		.color-radio{
+			text-align: center;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+	</style>
+
+	<script>
+		
+		var ctx;
+
+		function init(){
+			ctx = document.getElementById('canvasObject').getContext('2d');
+			draw();		//draw - Funkcija koja iscrtava po canvasu. U sustini sam mogao samo ovu funkciju 
+		}				//postaviti na onClick, ali je skripta prethodno radila na onLoad pa je ostalo.
+
+		var colors = [];
+
+		function draw(){
+
+			function clearData(){
+				$('.podatak').remove();
+				$('#podaci').remove();
+			};
+
+			function randomWholeNumber(x){
+				return Math.ceil(Math.random()*x);
+			};
+
+			function printColors(){
+				for(var l = 0; l < 1; l++){
+					var ul = document.createElement('ul');
+					ul.setAttribute('id', 'podaci');
+					document.body.appendChild(ul);
+					for(var k = 0; k < colors.length; k++){
+						var li = document.createElement('li');
+						li.setAttribute('class', 'podatak');
+						li.style.color = colors[k];
+						li.innerHTML = colors[k];
+						document.body.appendChild(li);
+					}
+				}
+			};
+
+			if($('#random-colors').is(':checked')){
+				clearData();
+				for(var y = 0; y<900; y+=300){
+					for(var i = 0; i<900; i+=300){
+						var rgb1 = randomWholeNumber(255);
+						var rgb2 = randomWholeNumber(255);
+						var rgb3 = randomWholeNumber(255);
+
+						var rgbValue = 'rgb('+rgb1+','+rgb2+','+rgb3+')';
+
+						colors.push(rgbValue);
+
+						ctx.fillStyle = rgbValue;
+
+						ctx.fillRect(i, y, 300, 300);
+					}
+				}
+				printColors();															
+			}else if($('#warm-colors').is(':checked')){
+				clearData();
+				for(var y = 0; y<900; y+=300){
+					for(var i = 0; i<900; i+=300){
+						var rgb1 = randomWholeNumber(255);
+						var rgb2 = randomWholeNumber(255);
+						var rgb3 = randomWholeNumber(rgb1-1);
+
+						var rgbValue = 'rgb('+rgb1+','+rgb2+','+rgb3+')';
+
+						colors.push(rgbValue);
+
+						ctx.fillStyle = rgbValue;
+
+						ctx.fillRect(i, y, 300, 300);
+					}
+				}
+				printColors();
+			} else if($('#cold-colors').is(':checked')){
+				clearData();
+				for(var y = 0; y<900; y+=300){
+					for(var i = 0; i<900; i+=300){
+						var rgb3 = randomWholeNumber(255);
+						var rgb1 = randomWholeNumber(rgb3-1);
+						var rgb2 = randomWholeNumber(255);
+						
+						var rgbValue = 'rgb('+rgb1+','+rgb2+','+rgb3+')';
+
+						colors.push(rgbValue);
+
+						ctx.fillStyle = rgbValue;
+
+						ctx.fillRect(i, y, 300, 300);
+					}
+				}
+				printColors();
+			}
+			colors = [];
+		};
+	</script>
+
+</head>
+<body>
+	<canvas id="canvasObject" width="900px" height="900px"></canvas>
+	<br>
+	<form>
+		<input type="radio" name="color-temp" class="color-radio" id="random-colors" value="random" checked> Random colors<br>
+		<input type="radio" name="color-temp" class="color-radio" id="warm-colors" value="warm"> Warm colors<br>
+		<input type="radio" name="color-temp" class="color-radio" id="cold-colors" value="cold"> Cold colors
+	</form>
+	<button id="colorButton" onClick='init();'>Click for new colors</button>
+	<h2>Colors used:</h2>
+</body>
+</html>
